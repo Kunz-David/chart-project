@@ -10,7 +10,47 @@ import {GridColumns} from "@visx/grid"
 import {useAtomValue} from "jotai"
 import {dataAtom} from "../../data.ts"
 import ChartBackground from "./ChartBackground.tsx"
+import {buildChartTheme} from "@visx/xychart"
 
+const theme = buildChartTheme({
+  backgroundColor: 'transparent',
+  colors: ['#aeaeae', '#fff'],
+  svgLabelBig: {
+    fill: '#333',
+    fontSize: 20,
+    fontWeight: 'bold',
+    fontFamily: 'Arial',
+  },
+  svgLabelSmall: {
+    fill: '#333',
+    fontSize: 12,
+    fontFamily: 'Arial',
+  },
+  htmlLabel: {
+    fontSize: 16,
+    fontWeight: 700,
+    fontFamily: 'Arial',
+    color: '#333',
+  },
+  xAxisLineStyles: {
+    stroke: '#333',
+  },
+  yAxisLineStyles: {
+    stroke: '#333',
+  },
+  xTickLineStyles: {
+    stroke: '#333',
+  },
+  yTickLineStyles: {
+    stroke: '#333',
+  },
+  tickLength: 10,
+  gridColor: '#ddd',
+  gridColorDark: '#555',
+  gridStyles: {
+    strokeDasharray: '4,4',
+  },
+})
 
 const truncate = (str: string, length: number) => {
   if (str.length > length) {

@@ -2,6 +2,7 @@ import MyChart from "./chartComponents/MyChart.tsx"
 import ParentSize from "@visx/responsive/lib/components/ParentSize"
 import {Suspense} from "react"
 import {ErrorBoundary} from "react-error-boundary"
+import MyChartXY from "./chartComponents/MyChartXY.tsx"
 
 function ChartSkeleton() {
   return (
@@ -66,6 +67,9 @@ export default function ChartSuspenseWrapper() {
             <Suspense fallback={<ChartSkeleton/>}>
               <MyChart width={width}
                        height={height}
+              />
+              <MyChartXY width={width}
+                         height={height}
               />
             </Suspense>
           </ErrorBoundary>
