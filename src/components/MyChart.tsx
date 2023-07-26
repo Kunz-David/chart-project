@@ -1,43 +1,13 @@
-import React, { useState } from "react"
-import { Bar } from "@visx/shape"
-import { Group } from "@visx/group"
-import { AxisBottom, AxisLeft } from "@visx/axis"
-import { scaleBand, scaleLinear } from "@visx/scale"
-import { useTooltip, TooltipWithBounds, defaultStyles } from "@visx/tooltip"
-import { localPoint } from '@visx/event'
-
-// Define your chart data type
-type ChartData = {
-  category: string;
-  progress: number;
-  complexity: number;
-};
-
-const chartData: ChartData[] = [
-  { category: "Home Page", progress: 85, complexity: 3 },
-  { category: "Product Listing", progress: 70, complexity: 4 },
-  { category: "Product Detail", progress: 90, complexity: 5 },
-  { category: "Shopping Cart", progress: 60, complexity: 4 },
-  { category: "Checkout", progress: 75, complexity: 5 },
-  { category: "User Profile", progress: 80, complexity: 2 },
-  { category: "Navigation", progress: 95, complexity: 3 },
-]
-
-const width = 500
-const height = 500
-const margin = { top: 20, bottom: 40, left: 90, right: 20 }
-
-// Create scales
-const yScale = scaleBand({
-  domain: chartData.map((d) => d.category),
-  range: [margin.top, height - margin.bottom],
-  padding: 0.1,
-})
-
-const xScale = scaleLinear({
-  domain: [0, 100], // Adjusting the maximum value to 100
-  range: [margin.left, width - margin.right],
-})
+import {useMemo, useState} from "react"
+import {Bar} from "@visx/shape"
+import {Group} from "@visx/group"
+import {AxisBottom, AxisLeft} from "@visx/axis"
+import {scaleBand, scaleLinear} from "@visx/scale"
+import {defaultStyles, TooltipWithBounds, useTooltip} from "@visx/tooltip"
+import {localPoint} from '@visx/event'
+import {ChartData, Margins} from "../types.ts"
+import {useAtomValue} from "jotai"
+import {dataAtom} from "./ChartSuspenseWrapper.tsx"
 
 const truncate = (str: string, length: number) => {
   if (str.length > length) {
@@ -47,8 +17,15 @@ const truncate = (str: string, length: number) => {
   }
 }
 
-export default function MyChart() {
+interface MyChartInterface {
+  width: number
+  height: number
+  margin: Margins
+}
+
+export default function MyChart({width, height, margin}: MyChartInterface) {
   const [selectedBar, setSelectedBar] = useState<string | null>(null)
+  const chartData = useAtomValue(dataAtom)
   const {
     showTooltip,
     hideTooltip,
@@ -57,14 +34,25 @@ export default function MyChart() {
     tooltipTop,
   } = useTooltip<ChartData>()
 
+  const yScale = useMemo(() => scaleBand({
+    domain: chartData.map((d) => d.category),
+    range: [margin.top, height - margin.bottom],
+    padding: 0.1,
+  }), [chartData, margin.top, margin.bottom, height])
+
+  const xScale = useMemo(() => scaleLinear({
+    domain: [0, 100],
+    range: [margin.left, width - margin.right],
+  }), [margin.left, margin.right, width])
+
   return (
     <div>
       <svg width={width} height={height}>
         <defs>
           <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#f43f5e" />
-            <stop offset="50%" stopColor="#d946ef" />
-            <stop offset="100%" stopColor="#6366f1" />
+            <stop offset="0%" stopColor="#f43f5e"/>
+            <stop offset="50%" stopColor="#d946ef"/>
+            <stop offset="100%" stopColor="#6366f1"/>
           </linearGradient>
         </defs>
         {chartData.map((d) => {
@@ -90,7 +78,7 @@ export default function MyChart() {
                   hideTooltip()
                 }}
                 onMouseMove={(event) => {
-                  const coords = localPoint(event) || { x: 0, y: 0 }
+                  const coords = localPoint(event) || {x: 0, y: 0}
                   setSelectedBar(d.category)
                   showTooltip({
                     tooltipData: d,
@@ -108,7 +96,7 @@ export default function MyChart() {
           stroke={'#333'}
           tickStroke={'#333'}
           tickFormat={value => truncate(value, 20)}
-          tickLabelProps={()=> ({
+          tickLabelProps={() => ({
             dx: '-0.25em',
             dy: '0.25em',
             fontSize: 14,
@@ -123,7 +111,7 @@ export default function MyChart() {
           tickFormat={value => `${value}%`}
           stroke={'#333'}
           tickStroke={'#333'}
-          tickValues={[0, 25, 50, 75, 100]}
+          tickValues={[0, 20, 40, 60, 80, 100]}
           tickLabelProps={() => ({
             dy: '0.25em',
             dx: '-0.5em',
