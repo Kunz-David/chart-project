@@ -1,14 +1,8 @@
-import {useContext} from 'react'
 import {PatternLines} from "@visx/pattern"
-import {DataContext} from "@visx/xychart"
-const patternId = 'xy-chart-pattern'
+import {ChartInnerProps} from "./MyChart.tsx"
 
-export default function ChartBackground() {
-  const {theme, margin, width, height, innerWidth, innerHeight} = useContext(DataContext)
-
-  // early return values not available in context
-  if (width == null || height == null || margin == null || theme == null) return null
-
+const patternId = 'chart-pattern'
+export default function ChartBackground( {margin, innerWidth, innerHeight}: ChartInnerProps) {
   return (
     <>
       <PatternLines
@@ -16,10 +10,10 @@ export default function ChartBackground() {
         width={16}
         height={16}
         orientation={['diagonal']}
-        stroke={theme?.gridStyles?.stroke}
+        stroke={"black"}
         strokeWidth={1}
+        strokeDasharray={"1 1"}
       />
-      <rect x={0} y={0} width={width} height={height} fill={theme?.backgroundColor ?? '#fff'}/>
       <rect
         x={margin.left}
         y={margin.top}

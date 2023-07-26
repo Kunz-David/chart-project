@@ -1,10 +1,10 @@
-import {useMemo, useState} from "react"
-import {scaleBand, scaleLinear} from "@visx/scale"
-import {useTooltip} from "@visx/tooltip"
+import {useEffect, useState} from "react"
+// import {TooltipWithBounds, useTooltip} from "@visx/tooltip"
 import {ChartData} from "../../types.ts"
 import {useAtomValue} from "jotai"
 import {dataAtom} from "../../data.ts"
-import {buildChartTheme, BarSeries, Axis, Tooltip, XYChart} from "@visx/xychart"
+import {AnimatedBarSeries, AnimatedGrid, Axis, buildChartTheme, Tooltip, XYChart} from "@visx/xychart"
+import {defaultStyles} from "@visx/tooltip"
 
 const theme = buildChartTheme({
   backgroundColor: 'transparent',
@@ -64,66 +64,74 @@ interface MyChartInterface {
   height: number
 }
 
+function getTickCount(width: number) {
+  if (width > 800) return 10
+  if (width > 420) return 5
+  return 3
+}
+
 export default function MyChartXY({width, height}: MyChartInterface) {
   const margin = {top: 20, bottom: 50, left: 110, right: 20}
   const [selectedBar, setSelectedBar] = useState<string | null>(null)
   const chartData = useAtomValue(dataAtom)
-  const {
-    showTooltip,
-    hideTooltip,
-    tooltipData,
-    tooltipLeft,
-    tooltipTop,
-  } = useTooltip<ChartData>()
 
   if (chartData.length === 0) {
     throw new Error("No chart data")
   }
 
-  const horizontalTickCount = width > 420 ? (width > 800 ? 10 : 5) : 3
-  const innerWidth = width - margin.left - margin.right
-  const innerHeight = height - margin.top - margin.bottom
+  const horizontalTickCount = getTickCount(width)
 
-  const yScaleConfig = useMemo(() => scaleBand({
-    domain: chartData.map((d) => d.category),
-    range: [margin.top, height - margin.bottom],
-    padding: 0.1,
-  }), [chartData, margin.top, margin.bottom, height])
-
-  const xScaleConfig = useMemo(() => scaleLinear({
-    domain: [0, 100],
-    range: [margin.left, width - margin.right],
-    nice: true,
-  }), [margin.left, margin.right, width])
+  useEffect(() => {
+    console.log(selectedBar)
+  }, [selectedBar])
 
   return (
     <div>
       <XYChart
-        xScale={{ type: 'band' }}
-        yScale={{ type: 'linear' }}
+        yScale={{type: 'band', domain: chartData.map((d) => d.category), padding: 0.2}}
+        xScale={{type: 'linear', domain: [0, 100]}}
         width={width}
         height={height}
         margin={margin}
         theme={theme}
       >
-        <Axis orientation="bottom"/>
-        <Axis orientation="left"/>
-        <BarSeries
+        <Axis
+          orientation="bottom"
+          numTicks={horizontalTickCount}
+        />
+        <Axis
+          orientation="left"
+          hideTicks
+        />
+        <AnimatedBarSeries
           dataKey="progress"
           data={chartData}
-          {...defaultAccessors}
-
+          radiusRight={true}
+          radius={7}
+          onPointerDown={(datum) => {
+            setSelectedBar(datum.datum.category)
+          }}
+          xAccessor={(d) => d.progress}
+          yAccessor={(d) => d.category}
         />
+        <AnimatedGrid numTicks={12} rows={false}/>
         <Tooltip<ChartData>
-          snapTooltipToDatumX
+          // snapTooltipToDatumX
           snapTooltipToDatumY
-          showVerticalCrosshair
-          showSeriesGlyphs
-          renderTooltip={({tooltipData, colorScale}) => (
+          style={{
+            ...defaultStyles,
+            // minWidth: 60,
+            // backgroundColor: 'rgba(0,0,0,0.9)',
+            // color: 'white',
+          }}
+          // showSeriesGlyphs
+          renderTooltip={({tooltipData}) => (
             <>
               <div>
-                {tooltipData?.nearestDatum?.datum.category}
+                <strong>{tooltipData?.nearestDatum?.datum.category}</strong>
               </div>
+              <div>Progress: {tooltipData?.nearestDatum?.datum.progress}%</div>
+              <div>Complexity: {tooltipData?.nearestDatum?.datum.complexity}</div>
             </>
           )}
         />
@@ -131,3 +139,4 @@ export default function MyChartXY({width, height}: MyChartInterface) {
     </div>
   )
 }
+
