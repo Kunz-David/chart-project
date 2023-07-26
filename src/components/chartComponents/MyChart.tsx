@@ -1,13 +1,16 @@
 import {useMemo, useState} from "react"
-import {Bar} from "@visx/shape"
+import {BarRounded} from "@visx/shape"
 import {Group} from "@visx/group"
 import {AxisBottom, AxisLeft} from "@visx/axis"
 import {scaleBand, scaleLinear} from "@visx/scale"
 import {defaultStyles, TooltipWithBounds, useTooltip} from "@visx/tooltip"
 import {localPoint} from '@visx/event'
-import {ChartData, Margins} from "../types.ts"
+import {ChartData} from "../../types.ts"
+import {GridColumns} from "@visx/grid"
 import {useAtomValue} from "jotai"
-import {dataAtom} from "./ChartSuspenseWrapper.tsx"
+import {dataAtom} from "../../data.ts"
+import ChartBackground from "./ChartBackground.tsx"
+
 
 const truncate = (str: string, length: number) => {
   if (str.length > length) {
@@ -20,10 +23,10 @@ const truncate = (str: string, length: number) => {
 interface MyChartInterface {
   width: number
   height: number
-  margin: Margins
 }
 
-export default function MyChart({width, height, margin}: MyChartInterface) {
+export default function MyChart({width, height}: MyChartInterface) {
+  const margin = {top: 20, bottom: 50, left: 110, right: 20}
   const [selectedBar, setSelectedBar] = useState<string | null>(null)
   const chartData = useAtomValue(dataAtom)
   const {
@@ -34,6 +37,14 @@ export default function MyChart({width, height, margin}: MyChartInterface) {
     tooltipTop,
   } = useTooltip<ChartData>()
 
+  if (chartData.length === 0) {
+    throw new Error("No chart data")
+  }
+
+  const horizontalTickCount = width > 420 ? (width > 800 ? 10 : 5) : 3
+  const innerWidth = width - margin.left - margin.right
+  const innerHeight = height - margin.top - margin.bottom
+
   const yScale = useMemo(() => scaleBand({
     domain: chartData.map((d) => d.category),
     range: [margin.top, height - margin.bottom],
@@ -43,11 +54,13 @@ export default function MyChart({width, height, margin}: MyChartInterface) {
   const xScale = useMemo(() => scaleLinear({
     domain: [0, 100],
     range: [margin.left, width - margin.right],
+    nice: true,
   }), [margin.left, margin.right, width])
 
   return (
     <div>
       <svg width={width} height={height}>
+        <ChartBackground/>
         <defs>
           <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#f43f5e"/>
@@ -55,24 +68,29 @@ export default function MyChart({width, height, margin}: MyChartInterface) {
             <stop offset="100%" stopColor="#6366f1"/>
           </linearGradient>
         </defs>
+
         {chartData.map((d) => {
+          const hoverGrowth = 1.3
           const barWidth = xScale(d.progress) - margin.left
           const barHeight = yScale.bandwidth()
           const isHovered = selectedBar === d.category
           const scaledY = yScale(d.category)
           if (scaledY === undefined) {
             console.error("Malformed data error, this should not happen as we are using TS for the data.")
-            return null
+            throw new Error("Malformed data error, this should not happen as we are using TS for the data.")
           }
-          const barY = isHovered ? scaledY - (barHeight * 0.1) / 2 : yScale(d.category)
+          const barY = isHovered ? scaledY - (barHeight * (hoverGrowth - 1)) / 2 : scaledY
           return (
             <Group key={d.category}>
-              <Bar
+              <BarRounded
+                className="fill-cotton-candy-500 stroke-cotton-candy-600 hover:stroke-tropical-blue-800 hover:fill-tropical-blue-700 transition-colors duration-500 ease-in-out border hover:z-20"
+                radius={6}
+                right
                 y={barY}
                 x={margin.left}
                 width={barWidth}
-                height={isHovered ? barHeight * 1.1 : barHeight}
-                fill={isHovered ? "url(#gradient)" : "#4287f5"}
+                height={isHovered ? barHeight * hoverGrowth : barHeight}
+                // fill={isHovered ? "url(#gradient)" : "#4287f5"}
                 onMouseLeave={() => {
                   setSelectedBar(null)
                   hideTooltip()
@@ -90,20 +108,16 @@ export default function MyChart({width, height, margin}: MyChartInterface) {
             </Group>
           )
         })}
-        <AxisLeft
-          scale={yScale}
-          left={margin.left}
-          stroke={'#333'}
-          tickStroke={'#333'}
-          tickFormat={value => truncate(value, 20)}
-          tickLabelProps={() => ({
-            dx: '-0.25em',
-            dy: '0.25em',
-            fontSize: 14,
-            textAnchor: 'end',
-            fill: '#333',
-            fontFamily: 'Arial',
-          })}
+        <GridColumns
+          scale={xScale}
+          top={margin.top}
+          width={innerWidth}
+          height={innerHeight}
+          stroke="black"
+          strokeOpacity={0.1}
+          strokeDasharray="4,4"
+          strokeWidth={2}
+          numTicks={horizontalTickCount}
         />
         <AxisBottom
           scale={xScale}
@@ -111,31 +125,43 @@ export default function MyChart({width, height, margin}: MyChartInterface) {
           tickFormat={value => `${value}%`}
           stroke={'#333'}
           tickStroke={'#333'}
-          tickValues={[0, 20, 40, 60, 80, 100]}
+          numTicks={horizontalTickCount}
           tickLabelProps={() => ({
-            dy: '0.25em',
-            dx: '-0.5em',
+            // dy: '0.25em',
+            // dx: '-0.5em',
+            // fill: '#333',
+            fontFamily: 'Arial',
+            fontSize: 14,
+            textAnchor: "middle",
+            verticalAnchor: "middle",
+            fill: "gray",
+          })}
+          label={'PROGRESS'}
+          labelOffset={12}
+          labelProps={{
+            fill: 'gray',
+            fontFamily: 'Arial',
+            textAnchor: "middle",
+            fontSize: 14,
+            fontWeight: 800,
+          }}
+        />
+        <AxisLeft
+          scale={yScale}
+          hideTicks
+          hideAxisLine
+          left={margin.left}
+          stroke={'#333'}
+          tickStroke={'#333'}
+          tickFormat={value => truncate(value, 15)}
+          tickLabelProps={() => ({
+            fontSize: 14,
+            verticalAnchor: 'middle',
+            textAnchor: 'end',
             fill: '#333',
             fontFamily: 'Arial',
           })}
         />
-        <text
-          x="50%"
-          y={height - 5}
-          textAnchor="middle"
-          className="text-sm font-bold text-gray-500"
-        >
-          Progress
-        </text>
-        <text
-          transform="rotate(-90)"
-          x={-height / 2}
-          y={15}
-          textAnchor="middle"
-          className="text-sm font-bold text-gray-500"
-        >
-          Category
-        </text>
       </svg>
       {tooltipData && (
         <TooltipWithBounds

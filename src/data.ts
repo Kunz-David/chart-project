@@ -1,5 +1,7 @@
 import {ChartData} from "./types.ts"
+import {atom} from "jotai"
 
+export const dataAtom = atom(async () => fetchChartData())
 export async function fetchChartData(): Promise<ChartData[]> {
   await new Promise(resolve => {
     setTimeout(resolve, 1000)
