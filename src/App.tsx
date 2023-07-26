@@ -1,14 +1,14 @@
-import {useState} from 'react'
-import MyChart from "./components/MyChart.tsx"
 import {AppLayout} from "./components/AppLayout.tsx"
+import ChartSuspenseWrapper from "./components/ChartSuspenseWrapper.tsx"
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
       <AppLayout>
-        <MyChart/>
+        <div className="w-full p-5 h-80">
+          <ChartSuspenseWrapper/>
+        </div>
       </AppLayout>
     </>
   )
