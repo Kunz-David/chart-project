@@ -1,11 +1,8 @@
-import MyChart from "./MyChart.tsx"
-import {fetchChartData} from "../data.ts"
+import MyChart from "./chartComponents/MyChart.tsx"
 import ParentSize from "@visx/responsive/lib/components/ParentSize"
-import {atom} from "jotai"
 import {Suspense} from "react"
 import {ErrorBoundary} from "react-error-boundary"
-
-export const dataAtom = atom(async () => fetchChartData())
+import MyChartXY from "./chartComponents/MyChartXY.tsx"
 
 function ChartSkeleton() {
   return (
@@ -62,8 +59,6 @@ function ChartErrorFallback({error, resetErrorBoundary}: { error: Error, resetEr
 
 export default function ChartSuspenseWrapper() {
 
-  const margin = {top: 20, bottom: 40, left: 90, right: 20}
-
   return (
     <>
       <ParentSize>
@@ -72,7 +67,9 @@ export default function ChartSuspenseWrapper() {
             <Suspense fallback={<ChartSkeleton/>}>
               <MyChart width={width}
                        height={height}
-                       margin={margin}
+              />
+              <MyChartXY width={width}
+                         height={height}
               />
             </Suspense>
           </ErrorBoundary>

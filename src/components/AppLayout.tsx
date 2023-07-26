@@ -12,7 +12,7 @@ interface AppLayoutProps {
 
 function DefaultHeader() {
   return (
-    <header className="bg-my-cyan-400 text-gray-100 p-4 shadow-lg">
+    <header className="bg-malibu-400 text-gray-800 p-4 shadow-lg">
       <h1 className="text-lg sm:text-2xl font-semibold sm:ml-16 sm:mt-4 sm:mb-2">Progress Checker</h1>
     </header>
   )
@@ -34,7 +34,7 @@ export function AppLayout({ children, Header = DefaultHeader, Footer = DefaultFo
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow bg-gray-50">{children}</main>
+      <main className="flex-grow bg-[url('/public/beams.jpg')]">{children}</main>
       <Footer />
     </div>
   )
