@@ -14,7 +14,7 @@ const chartData: (ChartData)[] = [
   {
     category: "Home Page",
     progress: 85,
-    complexity: 3,
+    importance: 3,
     issues: [
       {
         id: 1001,
@@ -32,7 +32,7 @@ const chartData: (ChartData)[] = [
   {
     category: "Product Listing",
     progress: 70,
-    complexity: 4,
+    importance: 4,
     issues: [
       {
         id: 1002,
@@ -61,7 +61,7 @@ const chartData: (ChartData)[] = [
   {
     category: "Product Detail",
     progress: 90,
-    complexity: 5,
+    importance: 5,
     issues: [
       {
         id: 1003,
@@ -79,7 +79,7 @@ const chartData: (ChartData)[] = [
   {
     category: "Shopping Cart",
     progress: 60,
-    complexity: 4,
+    importance: 4,
     issues: [
       {
         id: 1004,
@@ -108,7 +108,7 @@ const chartData: (ChartData)[] = [
   {
     category: "Checkout",
     progress: 75,
-    complexity: 5,
+    importance: 5,
     issues: [
       {
         id: 1005,
@@ -125,11 +125,11 @@ const chartData: (ChartData)[] = [
   },
   {
     category: "User Profile",
-    progress: 80,
-    complexity: 2,
+    progress: 69,
+    importance: 2,
     issues: [
       {
-        id: 1006,
+        id: 420,
         title: "Add profile picture feature",
         status: "open",
         creator: "Mia",
@@ -144,7 +144,7 @@ const chartData: (ChartData)[] = [
   {
     category: "Navigation",
     progress: 95,
-    complexity: 3,
+    importance: 3,
     issues: [
       {
         id: 1007,

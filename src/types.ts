@@ -1,7 +1,7 @@
 export type ChartData = {
   category: string;
   progress: number;
-  complexity: number;
+  importance: number;
   issues: GitHubIssue[];
 }
 

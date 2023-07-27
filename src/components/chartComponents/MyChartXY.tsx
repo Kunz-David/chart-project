@@ -131,7 +131,7 @@ export default function MyChartXY({width, height}: MyChartInterface) {
                 <strong>{tooltipData?.nearestDatum?.datum.category}</strong>
               </div>
               <div>Progress: {tooltipData?.nearestDatum?.datum.progress}%</div>
-              <div>Complexity: {tooltipData?.nearestDatum?.datum.complexity}</div>
+              <div>Complexity: {tooltipData?.nearestDatum?.datum.importance}</div>
             </>
           )}
         />

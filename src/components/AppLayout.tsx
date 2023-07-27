@@ -37,7 +37,7 @@ export function AppLayout({ children, Header = DefaultHeader, Footer = DefaultFo
   return (
     <div className="flex flex-col min-h-screen w-full min-w-fit">
       <Header />
-      <main className="flex-grow bg-[url('/beams.jpg')] bg-repeat h-full">{children}</main>
+      <main className="flex-grow bg-[url('/beams.jpg')] bg-repeat h-full p-3 sm:p-5">{children}</main>
       <Footer />
     </div>
   )

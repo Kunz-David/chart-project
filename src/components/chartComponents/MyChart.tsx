@@ -196,7 +196,7 @@ export default function MyChart({width, height}: MyChartProps) {
             <strong>{tooltipData.category}</strong>
           </div>
           <div>Progress: {tooltipData.progress}%</div>
-          <div>Complexity: {tooltipData.complexity}</div>
+          <div>Importance: {tooltipData.importance}</div>
         </TooltipWithBounds>
       )}
     </div>

@@ -60,7 +60,7 @@ function HoverBar({
       right
       y={barY}
       x={margin.left}
-      fill={colorScale(data.complexity)}
+      fill={colorScale(data.importance)}
       width={barWidth}
       height={(isHovered && isNotSmallScreen) ? barHeight * hoverGrowth : barHeight}
       onMouseLeave={() => {
