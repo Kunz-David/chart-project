@@ -70,7 +70,9 @@ function App() {
                       className={"w-full h-full max-w-full max-h-full p-3 rounded-xl shadow-lg bg-gray-200 group"}
                       handleComponent={handleComponent}
                   >
-                      <CategoryDetails datum={datum}/>
+                      <ErrorBoundary FallbackComponent={WindowErrorFallback}>
+                          <CategoryDetails datum={datum}/>
+                      </ErrorBoundary>
                   </Resizable>
               </div>
           }

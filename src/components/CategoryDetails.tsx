@@ -2,7 +2,11 @@ import IssueDetails from "./IssueDetails.tsx"
 import {ChartData} from "../types.ts"
 
 
-export function CategoryDetails({datum}: { datum: ChartData }) {
+export interface CategoryDetailsProps {
+  datum: ChartData
+}
+
+export function CategoryDetails({datum}: CategoryDetailsProps) {
 
   return (
     <div className="h-full flex flex-col">
