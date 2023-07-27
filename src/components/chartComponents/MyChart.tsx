@@ -4,7 +4,7 @@ import {scaleBand, scaleLinear} from "@visx/scale"
 import {TooltipWithBounds, useTooltip} from "@visx/tooltip"
 import {ChartData, Margin} from "../../types.ts"
 import {GridColumns} from "@visx/grid"
-import {atom, useAtomValue} from "jotai"
+import {Atom, atom, PrimitiveAtom, useAtomValue} from "jotai"
 import {dataAtom} from "../../data.ts"
 import ChartBackground from "./ChartBackground.tsx"
 import HoverBar from "./HoverBar.tsx"
@@ -34,9 +34,10 @@ function getTickCount(width: number) {
   return 3
 }
 
-interface MyChartProps {
+export interface MyChartProps {
   width: number
   height: number
+  dataActiveAtom?: Atom<Promise<ChartData[]>> | PrimitiveAtom<ChartData[]>
 }
 
 const colors = {
@@ -51,9 +52,9 @@ const colors = {
 
 const hoveredDatumAtom = atom<ChartData | null>(null)
 
-export default function MyChart({width, height}: MyChartProps) {
+export default function MyChart({width, height, dataActiveAtom=dataAtom}: MyChartProps) {
   const margin = {top: 20, bottom: 50, left: 110, right: 20}
-  const chartData = useAtomValue(dataAtom)
+  const chartData = useAtomValue(dataActiveAtom)
   const hoveredDatum = useAtomValue(hoveredDatumAtom)
   const selectedDatum = useAtomValue(selectedDatumAtom)
   const {
@@ -99,8 +100,8 @@ export default function MyChart({width, height}: MyChartProps) {
 
   return (
     <div style={{position: "relative"}}>
-      <svg width={width} height={height}>
-        <ChartBackground margin={margin} innerWidth={innerWidth} innerHeight={innerHeight}/>
+      <svg data-testid={"MyChart-svg"} width={width} height={height}>
+        <ChartBackground data-testid={"chart-background"} margin={margin} innerWidth={innerWidth} innerHeight={innerHeight}/>
         {chartData.map((d) =>
           <HoverBar
             key={d.category}
@@ -196,7 +197,7 @@ export default function MyChart({width, height}: MyChartProps) {
             <strong>{tooltipData.category}</strong>
           </div>
           <div>Progress: {tooltipData.progress}%</div>
-          <div>Complexity: {tooltipData.complexity}</div>
+          <div>Importance: {tooltipData.importance}</div>
         </TooltipWithBounds>
       )}
     </div>

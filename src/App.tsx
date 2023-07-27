@@ -15,19 +15,19 @@ import {IconArrowsDiagonal2, IconArrowsMoveHorizontal, IconArrowsMoveVertical} f
 const handleComponent: HandleComponent = {
   bottomRight: (
     <div
-      className="group-hover:visible invisible flex justify-center items-center w-5 h-5 rounded-full bg-gray-300 shadow-lg">
+      className="group-hover:visible ease-in-out transition-all duration-300 invisible flex justify-center items-center w-5 h-5 rounded-full bg-gray-300 shadow-lg">
       <IconArrowsDiagonal2 size={16} className="text-gray-700"/>
     </div>
   ),
   bottom: (
     <div
-      className="group-hover:visible invisible flex justify-center items-center w-5 h-5 rounded-full bg-gray-300 shadow-lg">
+      className="group-hover:visible ease-in-out transition-all duration-300 invisible flex justify-center items-center w-5 h-5 rounded-full bg-gray-300 shadow-lg">
       <IconArrowsMoveVertical size={16} className="text-gray-700"/>
     </div>
   ),
   right: (
     <div
-      className="group-hover:visible invisible flex justify-center items-center w-5 h-5 rounded-full bg-gray-300 shadow-lg">
+      className="group-hover:visible ease-in-out transition-all duration-300 invisible flex justify-center items-center w-5 h-5 rounded-full bg-gray-300 shadow-lg">
       <IconArrowsMoveHorizontal size={16} className="text-gray-700"/>
     </div>
   ),
@@ -43,10 +43,10 @@ function App() {
   return (
     <>
       <AppLayout>
-        <div className="flex md:flex-row flex-col justify-start">
+        <div className="flex md:flex-row flex-col justify-start md:space-x-5 space-y-3 md:space-y-0">
           <div className="flex">
             <Resizable
-              className={"w-full h-full max-w-full max-h-full m-3 md:m-5 p-3 rounded-xl shadow-lg bg-gray-200 group"}
+              className={"w-full h-full max-w-full max-h-full p-3 rounded-xl shadow-lg bg-gray-200 group"}
               defaultSize={{
                 width: chartWidth,
                 height: 500,
@@ -67,10 +67,12 @@ function App() {
           {datum &&
               <div className="flex-grow">
                   <Resizable
-                      className={"w-full h-full max-w-full max-h-full m-3 md:m-5 p-3 rounded-xl shadow-lg bg-gray-200 group"}
+                      className={"w-full h-full max-w-full max-h-full p-3 rounded-xl shadow-lg bg-gray-200 group"}
                       handleComponent={handleComponent}
                   >
-                      <CategoryDetails datum={datum}/>
+                      <ErrorBoundary FallbackComponent={WindowErrorFallback}>
+                          <CategoryDetails datum={datum}/>
+                      </ErrorBoundary>
                   </Resizable>
               </div>
           }
