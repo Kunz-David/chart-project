@@ -9,6 +9,10 @@ import {dataAtom} from "../../data.ts"
 import ChartBackground from "./ChartBackground.tsx"
 import HoverBar from "./HoverBar.tsx"
 import {ChartBorder} from "./ChartBorder.tsx"
+import {selectedDatumAtom} from "../../atoms.ts"
+// import { scaleOrdinal } from "d3-scale"
+import {schemePuRd} from "d3-scale-chromatic"
+import {CenteredText} from "./CenteredText.tsx"
 
 export interface ChartInnerProps {
   margin: Margin
@@ -30,7 +34,7 @@ function getTickCount(width: number) {
   return 3
 }
 
-interface MyChartInterface {
+interface MyChartProps {
   width: number
   height: number
 }
@@ -45,11 +49,9 @@ const colors = {
   },
 }
 
-
-const selectedDatumAtom = atom<ChartData | null>(null)
 const hoveredDatumAtom = atom<ChartData | null>(null)
 
-export default function MyChart({width, height}: MyChartInterface) {
+export default function MyChart({width, height}: MyChartProps) {
   const margin = {top: 20, bottom: 50, left: 110, right: 20}
   const chartData = useAtomValue(dataAtom)
   const hoveredDatum = useAtomValue(hoveredDatumAtom)
@@ -73,6 +75,11 @@ export default function MyChart({width, height}: MyChartInterface) {
     range: [margin.left, width - margin.right],
     nice: true,
   }), [margin.left, margin.right, width])
+
+  const colorScale = useMemo(() => scaleLinear({
+    domain: [1, 5],
+    range: [...schemePuRd[5]],
+  }), [])
 
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
@@ -101,6 +108,7 @@ export default function MyChart({width, height}: MyChartInterface) {
             margin={margin}
             xScale={xScale}
             yScale={yScale}
+            colorScale={colorScale}
             hoveredDatumAtom={hoveredDatumAtom}
             selectedDatumAtom={selectedDatumAtom}
             showTooltip={showTooltip}
@@ -153,6 +161,7 @@ export default function MyChart({width, height}: MyChartInterface) {
             margin={margin}
             xScale={xScale}
             yScale={yScale}
+            colorScale={colorScale}
             hoveredDatumAtom={hoveredDatumAtom}
             selectedDatumAtom={selectedDatumAtom}
             showTooltip={showTooltip}
@@ -170,12 +179,18 @@ export default function MyChart({width, height}: MyChartInterface) {
           strokeWidth={2}
           numTicks={horizontalTickCount}
         />
+        {selectedDatum === null &&
+          <CenteredText text={"Click on any bar"}
+                      innerWidth={innerWidth}
+                      innerHeight={innerHeight}
+                      margin={margin}
+        />
+        }
       </svg>
       {tooltipData && (
         <TooltipWithBounds
           top={tooltipTop}
           left={tooltipLeft}
-          // style={defaultStyles}
         >
           <div className="bg-gray-50">
             <strong>{tooltipData.category}</strong>
