@@ -1,4 +1,5 @@
 import React from 'react'
+import {IconReportAnalytics} from "@tabler/icons-react"
 
 interface ComponentProps {
   children?: React.ReactNode;
@@ -13,7 +14,9 @@ interface AppLayoutProps {
 function DefaultHeader() {
   return (
     <header className="bg-malibu-400 text-gray-800 p-4 shadow-lg">
-      <h1 className="text-lg sm:text-2xl font-semibold sm:ml-16 sm:mt-4 sm:mb-2">Progress Checker</h1>
+      <h1 className="text-lg sm:text-2xl font-semibold sm:ml-16 sm:mt-4 sm:mb-2">
+        <IconReportAnalytics size={36} className="inline-block mr-2 pb-0.5"/> Progress Checker
+      </h1>
     </header>
   )
 }
@@ -32,9 +35,9 @@ function DefaultFooter() {
 
 export function AppLayout({ children, Header = DefaultHeader, Footer = DefaultFooter }: AppLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen w-full min-w-fit">
       <Header />
-      <main className="flex-grow bg-[url('/public/beams.jpg')]">{children}</main>
+      <main className="flex-grow bg-[url('/beams.jpg')] bg-repeat h-full">{children}</main>
       <Footer />
     </div>
   )

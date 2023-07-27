@@ -5,10 +5,12 @@ export type ChartData = {
   issues: GitHubIssue[];
 }
 
+export type IssueStatus = "open" | "closed" | "in-progress";
+
 export type GitHubIssue = {
   id: number;
   title: string;
-  status: "open" | "closed";
+  status: IssueStatus;
   creator: string;
   assignee: string;
   labels: string[];
