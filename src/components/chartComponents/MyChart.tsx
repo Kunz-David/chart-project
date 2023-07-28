@@ -53,6 +53,7 @@ export default function MyChart({width, height, dataActiveAtom = dataAtom}: MyCh
     tooltipTop,
   } = useTooltip<ChartData>()
 
+  // using useMemo to memoize the scales and improve performance
   const yScale = useMemo(() => scaleBand({
     domain: chartData.map((d) => d.category),
     range: [margin.top, height - margin.bottom],
