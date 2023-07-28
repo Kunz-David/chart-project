@@ -178,7 +178,11 @@ Visx in my opinion also has a higher ceiling than Recharts, but it is also more 
 
 ### Browser support
 
-I tested t
+The app has been manually tested in the latest versions of Chrome, Firefox, and Safari. On mobile devices, it has been
+tested on IOS on safari.
 
+### Testing
 
-
+I used Vitest to run unit test and the React testing library (@testing-library/react) to query my DOM. I covered the main
+feature of the app, which is displaying the chart and the category details, with some basic tests. This was a new thing for me and if I had more time 
+I would create some End-to-End tests with Cypress.
