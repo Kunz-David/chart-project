@@ -20,3 +20,9 @@ export type GitHubIssue = {
 }
 
 export type Margin = { top: number, bottom: number, left: number, right: number }
+
+export interface ChartInnerProps {
+  margin: Margin
+  innerWidth: number
+  innerHeight: number
+}

@@ -1,24 +1,16 @@
-import {useEffect, useMemo} from "react"
+import {useMemo} from "react"
 import {AxisBottom, AxisLeft} from "@visx/axis"
 import {scaleBand, scaleLinear} from "@visx/scale"
 import {TooltipWithBounds, useTooltip} from "@visx/tooltip"
 import {ChartData, Margin} from "../../types.ts"
 import {GridColumns} from "@visx/grid"
 import {Atom, atom, PrimitiveAtom, useAtomValue} from "jotai"
-import {dataAtom} from "../../data.ts"
-import ChartBackground from "./ChartBackground.tsx"
+import {ChartBackground} from "./ChartBackground.tsx"
 import HoverBar from "./HoverBar.tsx"
 import {ChartBorder} from "./ChartBorder.tsx"
-import {selectedDatumAtom} from "../../atoms.ts"
-// import { scaleOrdinal } from "d3-scale"
+import {dataAtom, selectedDatumAtom} from "../../atoms.ts"
 import {schemePuRd} from "d3-scale-chromatic"
 import {CenteredText} from "./CenteredText.tsx"
-
-export interface ChartInnerProps {
-  margin: Margin
-  innerWidth: number
-  innerHeight: number
-}
 
 const truncate = (str: string, length: number) => {
   if (str.length > length) {
@@ -34,26 +26,22 @@ function getTickCount(width: number) {
   return 3
 }
 
+const colors = {
+  gray: {
+    700: '#4a5568',
+  },
+}
+const margin: Margin = {top: 20, bottom: 55, left: 110, right: 20}
+
+const hoveredDatumAtom = atom<ChartData | null>(null)
+
 export interface MyChartProps {
   width: number
   height: number
   dataActiveAtom?: Atom<Promise<ChartData[]>> | PrimitiveAtom<ChartData[]>
 }
 
-const colors = {
-  gray: {
-    100: '#f7fafc',
-    300: '#d2d6dc',
-    500: '#718096',
-    700: '#4a5568',
-    900: '#1a202c',
-  },
-}
-
-const hoveredDatumAtom = atom<ChartData | null>(null)
-
-export default function MyChart({width, height, dataActiveAtom=dataAtom}: MyChartProps) {
-  const margin = {top: 20, bottom: 55, left: 110, right: 20}
+export default function MyChart({width, height, dataActiveAtom = dataAtom}: MyChartProps) {
   const chartData = useAtomValue(dataActiveAtom)
   const hoveredDatum = useAtomValue(hoveredDatumAtom)
   const selectedDatum = useAtomValue(selectedDatumAtom)
@@ -69,13 +57,13 @@ export default function MyChart({width, height, dataActiveAtom=dataAtom}: MyChar
     domain: chartData.map((d) => d.category),
     range: [margin.top, height - margin.bottom],
     padding: 0.1,
-  }), [chartData, margin.top, margin.bottom, height])
+  }), [chartData, height])
 
   const xScale = useMemo(() => scaleLinear({
     domain: [0, 100],
     range: [margin.left, width - margin.right],
     nice: true,
-  }), [margin.left, margin.right, width])
+  }), [width])
 
   const colorScale = useMemo(() => scaleLinear({
     domain: [1, 5],
@@ -90,18 +78,17 @@ export default function MyChart({width, height, dataActiveAtom=dataAtom}: MyChar
     throw new Error("No chart data")
   }
 
-  useEffect(() => {
-    console.log("hoveredDatum", hoveredDatum)
-  }, [hoveredDatum])
-
-  useEffect(() => {
-    console.log("selectedDatum", selectedDatum)
-  }, [selectedDatum])
-
   return (
     <div style={{position: "relative"}}>
-      <svg data-testid={"MyChart-svg"} width={width} height={height}>
-        <ChartBackground data-testid={"chart-background"} margin={margin} innerWidth={innerWidth} innerHeight={innerHeight}/>
+      <svg data-testid={"MyChart-svg"}
+           width={width}
+           height={height}
+      >
+        <ChartBackground data-testid={"chart-background"}
+                         margin={margin}
+                         innerWidth={innerWidth}
+                         innerHeight={innerHeight}
+        />
         {chartData.map((d) =>
           <HoverBar
             key={d.category}
@@ -155,7 +142,11 @@ export default function MyChart({width, height, dataActiveAtom=dataAtom}: MyChar
             fontFamily: 'Arial',
           })}
         />
-        <ChartBorder margin={margin} innerWidth={innerWidth} innerHeight={innerHeight}/>
+        <ChartBorder
+          margin={margin}
+          innerWidth={innerWidth}
+          innerHeight={innerHeight}
+        />
         {hoveredDatum && (
           <HoverBar
             data={hoveredDatum}
@@ -181,11 +172,12 @@ export default function MyChart({width, height, dataActiveAtom=dataAtom}: MyChar
           numTicks={horizontalTickCount}
         />
         {selectedDatum === null &&
-          <CenteredText text={"Click on any bar"}
-                      innerWidth={innerWidth}
-                      innerHeight={innerHeight}
-                      margin={margin}
-        />
+            <CenteredText
+                text={"Click on any bar"}
+                innerWidth={innerWidth}
+                innerHeight={innerHeight}
+                margin={margin}
+            />
         }
       </svg>
       {tooltipData && (

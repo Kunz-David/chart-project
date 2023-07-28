@@ -4,8 +4,7 @@ import {ChartData, Margin} from "../../types.ts"
 import {ScaleBand, ScaleLinear} from "d3-scale"
 import {PrimitiveAtom} from "jotai/vanilla/atom"
 import {useAtom} from "jotai"
-import { useMedia } from 'react-use'
-import {useEffect} from "react"
+import {useMedia} from 'react-use'
 
 interface HoverBarProps {
   data: ChartData,
@@ -29,7 +28,7 @@ function HoverBar({
                     hoveredDatumAtom,
                     hideTooltip,
                     showTooltip,
-                    hoverGrowth=1.3,
+                    hoverGrowth = 1.3,
                     colorScale
                   }: HoverBarProps) {
   const [hoveredDatum, setHoveredDatum] = useAtom(hoveredDatumAtom)
@@ -42,13 +41,9 @@ function HoverBar({
   const isSelected = selectedDatum?.category === data.category
   const isNotSmallScreen = useMedia('(min-innerWidth: 640px)')
 
-  if (scaledY === undefined) {
+  if (scaledY === undefined || !data) {
     throw new Error("Malformed data")
   }
-
-  useEffect(() => {
-    console.log(isNotSmallScreen, "isNotSmallScreen")
-  }, [isNotSmallScreen])
 
   const barY = (isHovered && isNotSmallScreen) ? scaledY - (barHeight * (hoverGrowth - 1)) / 2 : scaledY
 

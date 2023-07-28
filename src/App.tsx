@@ -38,6 +38,7 @@ function App() {
   const {width} = useWindowSize()
 
   const isNotSmallScreen = width > 640
+  // approx half of the screen width when the screen is wide enough, otherwise the full width (minus some padding)
   const chartWidth = (isNotSmallScreen ? width / 2 : width) - 25
 
   return (

@@ -1,4 +1,4 @@
-import {ChartInnerProps} from "./MyChart.tsx"
+import {ChartInnerProps} from "../../types.ts"
 
 export function ChartBorder( {margin, innerWidth, innerHeight}: ChartInnerProps) {
   return (
