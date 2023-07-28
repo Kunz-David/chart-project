@@ -1,8 +1,8 @@
 import {PatternLines} from "@visx/pattern"
-import {ChartInnerProps} from "./MyChart.tsx"
+import {ChartInnerProps} from "../../types.ts"
 
 const patternId = 'chart-pattern'
-export default function ChartBackground( {margin, innerWidth, innerHeight}: ChartInnerProps) {
+export function ChartBackground( {margin, innerWidth, innerHeight}: ChartInnerProps) {
   return (
     <>
       <PatternLines

@@ -9,7 +9,7 @@ interface IssueDetailsProps {
 const IssueDetails: React.FC<IssueDetailsProps> = ({issue}) => {
 
   return (
-    <div className="p-4 m-2 bg-white shadow-lg rounded-lg" data-testid="issue-details">
+    <div className="p-4 m-2 bg-gray-50 shadow rounded-lg" data-testid="issue-details">
       <div className="flex justify-between items-start mb-2">
         <span className="flex-row items-end">
           <h2 className="text-xl font-bold max-w">{issue.title}</h2>

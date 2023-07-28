@@ -1,5 +1,7 @@
 import React from 'react'
 import {IconReportAnalytics} from "@tabler/icons-react"
+import {ErrorBoundary} from "react-error-boundary"
+import {WindowErrorFallback} from "./WindowErrorFallback.tsx"
 
 interface ComponentProps {
   children?: React.ReactNode;
@@ -25,20 +27,26 @@ function DefaultFooter() {
   return (
     <footer className="flex flex-col items-center justify-center bg-gray-800 text-white pb-1 pt-2">
       <div className="flex flex-col items-center mb-1 text-sm">
-        <img className="h-6" src='/vite.svg' alt="Logo" />
+        <img className="h-6" src="/vite.svg" alt="Logo"/>
         <div>© {new Date().getFullYear()}, David Kunz</div>
       </div>
-      <div className="text-xs text-center italic text-gray-500">This website was built as a test project for an interview.</div>
+      <div className="text-xs text-center italic text-gray-500">This website was built as a test project for an
+        interview.
+      </div>
     </footer>
   )
 }
 
-export function AppLayout({ children, Header = DefaultHeader, Footer = DefaultFooter }: AppLayoutProps) {
+export function AppLayout({children, Header = DefaultHeader, Footer = DefaultFooter}: AppLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen w-full min-w-fit">
-      <Header />
-      <main className="flex-grow bg-[url('/beams.jpg')] bg-repeat h-full p-3 sm:p-5">{children}</main>
-      <Footer />
+      <Header/>
+      <ErrorBoundary FallbackComponent={WindowErrorFallback}>
+        <main className="flex-grow bg-[url('/beams.jpg')] bg-repeat h-full p-3 sm:p-5">
+          {children}
+        </main>
+      </ErrorBoundary>
+      <Footer/>
     </div>
   )
 }
