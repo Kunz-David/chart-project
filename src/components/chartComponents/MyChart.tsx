@@ -53,7 +53,7 @@ const colors = {
 const hoveredDatumAtom = atom<ChartData | null>(null)
 
 export default function MyChart({width, height, dataActiveAtom=dataAtom}: MyChartProps) {
-  const margin = {top: 20, bottom: 50, left: 110, right: 20}
+  const margin = {top: 20, bottom: 55, left: 110, right: 20}
   const chartData = useAtomValue(dataActiveAtom)
   const hoveredDatum = useAtomValue(hoveredDatumAtom)
   const selectedDatum = useAtomValue(selectedDatumAtom)
