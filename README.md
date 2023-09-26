@@ -25,6 +25,18 @@ The application should consist of:
 
 ---
 
+## Results:
+
+### Responsiveness preview
+The responsive chart switches between *mobile* and *web* views.
+
+https://github.com/Kunz-David/chart-project/assets/24957764/e525d0be-0651-433d-8721-24e303b7b61c
+
+### Datum details inspection on click
+![Screenshot 2023-07-28 at 11 31 35 (2)](https://github.com/Kunz-David/chart-project/assets/24957764/fc1e8fbe-1afe-43ef-aa46-2ab55f621566)
+
+---
+
 ## Instructions on working with the project
 
 1) Get the source code:
