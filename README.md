@@ -27,7 +27,7 @@ The application should consist of:
 
 ## Results:
 
-See the page at [https://github.com/Kunz-David/chart-project](https://github.com/Kunz-David/chart-project).
+See the page at [kunz-david.github.io/chart-project/](kunz-david.github.io/chart-project/).
 
 ### Responsiveness preview
 The responsive chart switches between *mobile* and *web* views.
